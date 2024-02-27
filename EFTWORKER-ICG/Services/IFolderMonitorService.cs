@@ -7,5 +7,7 @@ namespace EFTWORKER_ICG.Services
         event EventHandler<FileCreatedEventArgs> FileCreated;
         void StartMonitoring();
         void StopMonitoring();
+        (bool, TransactionInfo, string) CheckForFile();
+        Task CreateResponseText(string response);
     }
 }

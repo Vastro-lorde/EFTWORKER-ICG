@@ -12,27 +12,42 @@ namespace EFTWORKER_ICG.Services
     {
         public TransactionInfo ParseXmlString(string xmlString)
         {
-            XmlSerializer serializer = new XmlSerializer(typeof(TransactionInfo));
-            using (StringReader reader = new StringReader(xmlString))
+            try
             {
+                if (xmlString == null || xmlString == "")
+                {
+                    throw new ArgumentNullException("xmlString should not be empty");
+                }
+                XmlSerializer serializer = new(typeof(TransactionInfo));
+                using StringReader reader = new(xmlString);
                 return (TransactionInfo)serializer.Deserialize(reader);
             }
-        }
-
-        public string SerializeXmlString(bool status,string? cardBin, string? cardBrand, string? transactionId)
-        {
-            string requesta = string.Empty;
-            if (status)
+            catch (Exception)
             {
-                requesta = "T";
-                return $"<?xml version=\"1.0\" encoding=\"ISO-8859-1\" ?>\r\n<Info>\r\n<Respuesta>{requesta}</Respuesta>\r\n<IdTransaccion>{transactionId}</IdTransaccion>\r\n<BinTarjeta>{cardBin}</BinTarjeta>\r\n<MarcaTarjeta>{cardBrand}</MarcaTarjeta>\r\n</Info>";
-            }
-            else
-            {
-                requesta = "F";
-                return $"<?xml version=\"1.0\" encoding=\"ISO-8859-1\" ?>\r\n<Info>\r\n<Respuesta>{requesta}</Respuesta>\r\n<IdTransaccion>{transactionId}</IdTransaccion>\r\n<BinTarjeta>{cardBin}</BinTarjeta>\r\n<MarcaTarjeta>{cardBrand}</MarcaTarjeta>\r\n</Info>";
+                throw;
             }
             
         }
+
+        public string SerializeXmlStringSuccess(bool status,string? cardBin, string? cardBrand, string? transactionId, string errCode, string errorDescription)
+        {
+            return $"<?xml version=\"1.0\" encoding=\"ISO-8859-1\" ?>\r\n<Info>\r\n<Respuesta>T</Respuesta>\r\n<IdTransaccion>{transactionId}</IdTransaccion>\r\n<BinTarjeta>{cardBin}</BinTarjeta>\r\n<MarcaTarjeta>{cardBrand}</MarcaTarjeta>\r\n</Info>";
+        }
+
+        public string SerializeXmlStringFail(string errCode, string errorDescription)
+        {
+            return $"<?xml version=\"1.0\" encoding=\"ISO-8859-1\" ?>\r\n<Info>\r\n<Respuesta>F</Respuesta>\r\n<Error>\r\n<CodError>{errCode}</CodError>\r\n<DescError>{errorDescription}</DescError>\r\n</Error>\r\n</Info>";
+        }
+
+        public string SerializeRequestString(decimal amount, string invoiceNumber, string serieNumber)
+        {
+            return $@"<?xml version=""1.0"" encoding=""ISO-8859-1"" ?>
+                    <Info>
+                        <Amount>{amount}</Amount>
+                        <InvoiceNumber>{invoiceNumber}</InvoiceNumber>
+                        <Serie>{serieNumber}</Serie>
+                    </Info>";
+        }
+
     }
 }
