@@ -39,13 +39,14 @@ namespace EFTWORKER_ICG.Services
             return $"<?xml version=\"1.0\" encoding=\"ISO-8859-1\" ?>\r\n<Info>\r\n<Respuesta>F</Respuesta>\r\n<Error>\r\n<CodError>{errCode}</CodError>\r\n<DescError>{errorDescription}</DescError>\r\n</Error>\r\n</Info>";
         }
 
-        public string SerializeRequestString(decimal amount, string invoiceNumber, string serieNumber)
+        public string SerializeRequestString(decimal amount, string invoiceNumber, string serieNumber, string transactionId)
         {
             return $@"<?xml version=""1.0"" encoding=""ISO-8859-1"" ?>
                     <Info>
                         <Amount>{amount}</Amount>
                         <InvoiceNumber>{invoiceNumber}</InvoiceNumber>
                         <Serie>{serieNumber}</Serie>
+                        <TransactionId>{transactionId}</TransactionId>
                     </Info>";
         }
 

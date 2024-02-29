@@ -32,7 +32,7 @@ namespace EFTWORKER_ICG
                 {
                     _logger.LogInformation("Worker running at: {time}", DateTimeOffset.Now);
                 }
-                await Task.Delay(20000, stoppingToken);
+                await Task.Delay(10000, stoppingToken);
             }
         }
 
@@ -42,7 +42,7 @@ namespace EFTWORKER_ICG
             await _dataConnections.OpenPortAsync();
 
             XmlDeserialHelper transactXmlHelper = new();
-            string requestToPosData = transactXmlHelper.SerializeRequestString(fileContent.Importe, fileContent.NumTicket.ToString(), fileContent.SerieTicket);
+            string requestToPosData = transactXmlHelper.SerializeRequestString(fileContent.Importe, fileContent.NumTicket.ToString(), fileContent.SerieTicket, fileContent.IdTransaccion.ToString());
             Console.WriteLine(requestToPosData);
             await _dataConnections.SendDataAsync(requestToPosData);
             
@@ -62,7 +62,6 @@ namespace EFTWORKER_ICG
             _folderMonitorService.StopMonitoring();
             await _dataConnections.ClosePortAsync();
             await base.StopAsync(cancellationToken);
-
         }
     }
 }
