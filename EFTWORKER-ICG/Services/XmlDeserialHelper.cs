@@ -29,6 +29,25 @@ namespace EFTWORKER_ICG.Services
             
         }
 
+        public TransactionInfo ParseRecievedXmlString(string xmlString)
+        {
+            try
+            {
+                if (xmlString == null || xmlString == "")
+                {
+                    throw new ArgumentNullException("xmlString should not be empty");
+                }
+                XmlSerializer serializer = new(typeof(TransactionInfo));
+                using StringReader reader = new(xmlString);
+                return (TransactionInfo)serializer.Deserialize(reader);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+
+        }
+
         public string SerializeXmlStringSuccess(bool status,string? cardBin, string? cardBrand, string? transactionId, string errCode, string errorDescription)
         {
             return $"<?xml version=\"1.0\" encoding=\"ISO-8859-1\" ?>\r\n<Info>\r\n<Respuesta>T</Respuesta>\r\n<IdTransaccion>{transactionId}</IdTransaccion>\r\n<BinTarjeta>{cardBin}</BinTarjeta>\r\n<MarcaTarjeta>{cardBrand}</MarcaTarjeta>\r\n</Info>";
